@@ -1,0 +1,112 @@
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const http = require("http");
+const { Server } = require("socket.io");
+const Shipment = require("./models/Shipment"); // Import model
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+const server = http.createServer(app);
+const io = new Server(server, {
+    cors: {
+        origin: "*", // Allow all origins for prototype
+        methods: ["GET", "POST"]
+    }
+});
+
+// Connect to MongoDB
+// NOTE: Using a local MongoDB instance. If running locally, ensure mongod is running.
+// Or specify a MongoDB Atlas connection string.
+const MONGO_URI = "mongodb://localhost:27017/logistics-assistant";
+
+mongoose.connect(MONGO_URI)
+    .then(() => console.log("MongoDB connected"))
+    .catch(err => console.error(err));
+
+// Initialize Mock Data if DB is empty
+const seedDatabase = async () => {
+    const count = await Shipment.countDocuments();
+    if (count === 0) {
+        const shipments = [
+            {
+                shipmentId: '101',
+                status: 'In Transit',
+                location: 'New York, NY',
+                eta: '2 hrs 30 mins',
+                nextStop: 'Boston, MA'
+            },
+            {
+                shipmentId: '102',
+                status: 'Pending',
+                location: 'Chicago, IL',
+                eta: '5 hrs 15 mins',
+                nextStop: 'Detroit, MI'
+            },
+            {
+                shipmentId: '103',
+                status: 'Delivered',
+                location: 'San Francisco, CA',
+                eta: 'Delivered',
+                nextStop: 'Los Angeles, CA'
+            }
+        ];
+        await Shipment.insertMany(shipments);
+        console.log("Database seeded with mock shipments");
+    }
+};
+seedDatabase();
+
+// --- API ROUTES ---
+
+// GET Shipment by ID
+app.get("/api/shipments/:id", async (req, res) => {
+    try {
+        const shipment = await Shipment.findOne({ shipmentId: req.params.id });
+        if (!shipment) return res.status(404).json({ message: "Shipment not found" });
+        res.json(shipment);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// UPDATE Shipment Status
+app.post("/api/shipments/update", async (req, res) => {
+    const { id, status } = req.body;
+    try {
+        const shipment = await Shipment.findOneAndUpdate(
+            { shipmentId: id },
+            { status: status },
+            { new: true } // Return updated document
+        );
+
+        if (!shipment) return res.status(404).json({ message: "Shipment not found" });
+
+        // Emit real-time update event
+        io.emit("shipmentUpdated", shipment);
+
+        res.json({ message: "Updated successfully", shipment });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// --- TASKS API (Simple Mock for now, could be DB too) ---
+app.get("/api/tasks", (req, res) => {
+    const tasks = [
+        { id: 1, text: 'Inspect vehicle #402', status: 'pending' },
+        { id: 2, text: 'Load shipment #102', status: 'pending' },
+        { id: 3, text: 'Submit daily log', status: 'completed' }
+    ];
+    res.json(tasks);
+});
+
+
+const PORT = process.env.PORT || 5050;
+
+server.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
+

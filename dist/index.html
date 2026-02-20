@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Logistics Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <!-- Leaflet Map CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script type="module" crossorigin src="/assets/index-CNknqVZo.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-uChrgdFH.css">
+</head>
+
+<body>
+    <div id="app">
+        <!-- Theme Toggle Button -->
+        <button id="theme-toggle" class="theme-toggle">
+            <span class="material-icons-round">light_mode</span>
+        </button>
+
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="logo">
+                <span class="material-icons-round">local_shipping</span>
+                <h1>LogiVoice</h1>
+            </div>
+            <ul class="nav-links">
+                <li class="active" data-page="dashboard">
+                    <span class="material-icons-round">dashboard</span>
+                    Dashboard
+                </li>
+                <li data-page="landing">
+                    <span class="material-icons-round">home</span>
+                    Home
+                </li>
+                <li data-page="about">
+                    <span class="material-icons-round">info</span>
+                    About
+                </li>
+                <li data-page="demo">
+                    <span class="material-icons-round">mic</span>
+                    Demo Guide
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="content">
+            <!-- Dynamic Page Content will be injected here -->
+            <div id="page-content"></div>
+        </main>
+
+        <!-- Floating Mic Button -->
+        <button id="mic-btn" class="mic-btn">
+            <span class="material-icons-round">mic</span>
+        </button>
+
+        <!-- Voice Transcript Display -->
+        <div id="transcript-container" class="transcript-container hidden">
+            <p id="transcript-text">Listening...</p>
+        </div>
+    </div>
+
+    <!-- Leaflet Map JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+</body>
+
+</html>

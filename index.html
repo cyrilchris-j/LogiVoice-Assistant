@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LogiVoice – Voice-Enabled Logistics Assistant</title>
+    <meta name="description"
+        content="Hands-free shipment tracking and task management for logistics drivers and warehouse workers.">
+    <link rel="stylesheet" href="src/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <!-- Leaflet Map CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+</head>
+
+<body>
+    <div id="app">
+        <!-- Theme Toggle Button -->
+        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+            <span class="material-icons-round">light_mode</span>
+        </button>
+
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="logo">
+                <span class="material-icons-round">local_shipping</span>
+                <h1>LogiVoice</h1>
+            </div>
+            <ul class="nav-links">
+                <li class="active" data-page="dashboard">
+                    <span class="material-icons-round">dashboard</span>
+                    Dashboard
+                </li>
+                <li data-page="landing">
+                    <span class="material-icons-round">home</span>
+                    Home
+                </li>
+                <li data-page="about">
+                    <span class="material-icons-round">info</span>
+                    About
+                </li>
+                <li data-page="demo">
+                    <span class="material-icons-round">record_voice_over</span>
+                    Voice Commands
+                </li>
+            </ul>
+
+            <!-- Operation Mode Selector -->
+            <div class="sidebar-footer">
+                <p>Operation Mode</p>
+                <div class="mode-btns">
+                    <button class="mode-btn active" data-mode="driver" title="Driver mode">🚗 Driver</button>
+                    <button class="mode-btn" data-mode="warehouse" title="Warehouse mode">📦 WH</button>
+                    <button class="mode-btn" data-mode="dispatcher" title="Dispatcher mode">📡 Disp.</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="content">
+            <div id="page-content"></div>
+        </main>
+
+        <!-- Floating Mic Button -->
+        <button id="mic-btn" class="mic-btn" title="Click to speak or say: Hey LogiVoice">
+            <span class="material-icons-round">mic</span>
+            <div id="mic-waveform" class="waveform">
+                <span></span><span></span><span></span><span></span><span></span>
+            </div>
+        </button>
+
+        <!-- Voice Transcript Display -->
+        <div id="transcript-container" class="transcript-container hidden">
+            <p id="transcript-text">Listening...</p>
+        </div>
+    </div>
+
+    <!-- Leaflet Map JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>

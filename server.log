@@ -1,0 +1,74 @@
+[33m[nodemon] 3.1.11[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): *.*[39m
+[33m[nodemon] watching extensions: js,mjs,cjs,json[39m
+[32m[nodemon] starting `node server.js`[39m
+Server running on port 5050
+MongoDB connected
+Database seeded with mock shipments
+Database seeded with demo users
+A user connected: hk7-TRjWCzwSErUvAAAB
+A user connected: Q6ScfzJHWenmM82IAAAF
+A user connected: sYNenr40YefLndNWAAAG
+A user connected: spL3pCjLl3wS_GVhAAAI
+A user connected: 5VMkZzDGxV02iaCsAAAK
+A user connected: ARW3pydlnDpwR4AHAAAM
+A user connected: 3c_8Kzpiaa38upCzAAAN
+A user connected: eJ75Z5HBIdF3ElmFAAAU
+A user connected: qigLur8TjE8WnFi9AAAV
+A user connected: _UjN9YfKjYSxb2eqAAAW
+A user connected: Kw_go4KfYKzjS8qHAAAX
+A user connected: WVNqjzhKbO_pSkivAAAY
+A user connected: MI1kCS4BnDdoFiuEAAAZ
+A user connected: M9JBHqeVK0fQxL8hAAAb
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+Server running on port 5050
+MongoDB connected
+A user connected: WIRI9FBJo6X6OVLkAAAB
+A user connected: wkd62xNu8vWFCbTAAAAD
+A user connected: 7gl6Smsq_3FFPT1kAAAN
+A user connected: rdB6RoQ58IlWoXGBAAAO
+A user connected: bOcTJwFLbX0_UU-RAAAP
+A user connected: 0RcSCgzGdExUP4huAAAQ
+A user connected: 04F3zOois9geOP2LAAAR
+A user connected: jFYpG210eUKcRR0YAAAS
+A user connected: kZfWUAykXQaq7xAaAAAT
+A user connected: -_nkOs2ZXuyWq_xSAAAU
+A user connected: Sp4ibTGIk2BR-4f2AAAV
+A user connected: Of2l3BO0R6Hk8TskAAAZ
+A user connected: wb-Tzef-Qs1H5KuAAAAa
+A user connected: KwzduIowGSlH45DKAAAb
+A user connected: OMz3-NDKv8apvp4eAAAe
+A user connected: yW3wsqnizwgBptpFAAAf
+User disconnected: OMz3-NDKv8apvp4eAAAe
+User disconnected: yW3wsqnizwgBptpFAAAf
+A user connected: EPPUWFQ6uGYdvnnHAAAi
+A user connected: abmNbDJIDFNUSu0LAAAj
+User disconnected: EPPUWFQ6uGYdvnnHAAAi
+User disconnected: abmNbDJIDFNUSu0LAAAj
+A user connected: W66TOysYxlyKbZ7eAAAm
+A user connected: CeSnAKRFzrHYDHfzAAAn
+A user connected: Rt35qq1_eqKNYoSRAAAq
+A user connected: QUwS69YNT3NvLKShAAAr
+User disconnected: CeSnAKRFzrHYDHfzAAAn
+User disconnected: W66TOysYxlyKbZ7eAAAm
+A user connected: YW2OzJNvViBxpEQUAAAu
+A user connected: HD3nHktQPBdVjE8LAAAv
+A user connected: -59xfAwexBueZcBfAAAy
+A user connected: TCGZ2EsTqfeplsDGAAAz
+(node:30622) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:30622) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:30622) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:30622) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+User disconnected: TCGZ2EsTqfeplsDGAAAz
+User disconnected: -59xfAwexBueZcBfAAAy
+A user connected: 98bZiUXD8c9HpNHAAAA2
+A user connected: wonVpycut7Yp1K-MAAA3
+A user connected: bShaLw5Rb3GdRaVHAAA5
+A user connected: PgVmxCyslC2xq4mdAAA7
+User disconnected: bShaLw5Rb3GdRaVHAAA5
+User disconnected: PgVmxCyslC2xq4mdAAA7
+A user connected: fmha_8RVhI9Ui9RwAAA-
+A user connected: EV3MTBZKsYt5lZlFAAA_
