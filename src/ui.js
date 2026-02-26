@@ -1,4 +1,4 @@
-import { getShipment, getTasks, getNextStop, getExceptions, getAuditLog } from './data.js';
+import { getShipment, getTasks, getNextStop, getExceptions, getAuditLog, getFromCache } from './data.js';
 import { getCurrentUser } from './auth.js';
 
 // Current operation mode
@@ -48,6 +48,10 @@ export const renderDashboard = () => {
     const user = getCurrentUser();
     const userName = user ? user.name : 'Driver';
 
+    // Start with last known stats if available
+    const cachedExceptions = getFromCache('exceptions') || [];
+    const cachedTasks = getFromCache('tasks') || [];
+
     content.innerHTML = `
         <div class="dashboard-header">
             <div>
@@ -73,7 +77,7 @@ export const renderDashboard = () => {
                 <div class="status-card mini kpi-red">
                     <span class="material-icons-round">warning</span>
                     <div>
-                        <h3 id="exceptions-count">0</h3>
+                        <h3 id="exceptions-count">${cachedExceptions.length}</h3>
                         <p>Exceptions</p>
                     </div>
                 </div>
@@ -81,7 +85,6 @@ export const renderDashboard = () => {
         </div>
 
         <div class="dashboard-grid">
-            <!-- Current Shipment -->
             <div class="card" id="shipment-card">
                 <h2>Current Shipment <span class="material-icons-round">local_shipping</span></h2>
                 <div id="shipment-details">
@@ -89,7 +92,6 @@ export const renderDashboard = () => {
                 </div>
             </div>
 
-            <!-- Voice Activity Panel -->
             <div class="card voice-activity-card" id="voice-activity-card">
                 <h2>Voice Activity <span class="material-icons-round">graphic_eq</span></h2>
                 <div id="voice-activity-feed" class="voice-activity-feed">
@@ -101,30 +103,30 @@ export const renderDashboard = () => {
                 </div>
             </div>
 
-            <!-- Live Fleet Map -->
             <div class="card" id="map-card" style="grid-column: span 2;">
                 <h2>Live Fleet Map <span class="material-icons-round">map</span></h2>
                 <div id="map"></div>
             </div>
 
-            <!-- Tasks -->
             <div class="card" id="task-card">
                 <h2>Task Board <span class="material-icons-round">assignment</span></h2>
                 <ul id="task-list" class="task-list">
-                    <li class="task-item">Loading tasks...</li>
+                    ${cachedTasks.length > 0 ? cachedTasks.map(t => `<li class="task-item"><span class="material-icons-round check-icon">radio_button_unchecked</span><div class="task-body"><span class="task-text">${t.text}</span></div></li>`).join('') : '<li class="task-item">Loading fresh tasks...</li>'}
                 </ul>
             </div>
 
-            <!-- Exception Log -->
             <div class="card" id="exception-card">
                 <h2>Exceptions <span class="material-icons-round">report_problem</span></h2>
                 <div id="exception-list">
-                    <p class="placeholder-text">No exceptions logged. Say "package damaged" or "customer not available".</p>
+                    ${cachedExceptions.length > 0 ? `<p class="placeholder-text">Loading fresh exceptions...</p>` : `<p class="placeholder-text">No exceptions logged.</p>`}
                 </div>
             </div>
         </div>
     `;
+
+    // Background render fresh data
     renderTasks();
+    renderExceptions();
 };
 
 // ─── LANDING PAGE ─────────────────────────────────────────────────────────────
@@ -554,33 +556,66 @@ export const renderDemoGuide = () => {
 
 // ─── LOGIN PAGE ──────────────────────────────────────────────────────────────
 export const renderLogin = () => {
-    const content = document.getElementById('page-content');
-    content.innerHTML = `
+    return `
         <div class="login-container">
             <div class="login-card">
                 <div class="login-header">
                     <span class="material-icons-round login-icon">local_shipping</span>
                     <h1>LogiVoice</h1>
-                    <p>Voice-Enabled Logistics Assistant</p>
+                    <p>Logistics Assistant</p>
                 </div>
                 <form id="login-form" class="login-form">
                     <div class="form-group">
                         <label for="username"><span class="material-icons-round">person</span> Username</label>
-                        <input type="text" id="username" name="username" required autocomplete="username">
+                        <input type="text" id="username" name="username" placeholder="e.g. driver1" required>
                     </div>
                     <div class="form-group">
                         <label for="password"><span class="material-icons-round">lock</span> Password</label>
-                        <input type="password" id="password" name="password" required autocomplete="current-password">
+                        <input type="password" id="password" name="password" placeholder="••••••••" required>
                     </div>
                     <div id="login-error" class="login-error hidden"></div>
                     <button type="submit" class="login-btn">
                         <span class="material-icons-round">login</span> Sign In
                     </button>
                 </form>
-                <div class="demo-credentials">
-                    <p><strong>Demo Accounts:</strong></p>
-                    <p>Admin: <code>admin</code> / <code>admin123</code></p>
-                    <p>Driver: <code>driver1</code> / <code>driver11</code></p>
+                <div class="auth-switch">
+                    Don't have an account? <a href="#" id="show-register">Register as Driver</a>
+                </div>
+            </div>
+        </div>
+    `;
+};
+
+// ─── REGISTER PAGE ───────────────────────────────────────────────────────────
+export const renderRegister = () => {
+    return `
+        <div class="login-container">
+            <div class="login-card">
+                <div class="login-header">
+                    <span class="material-icons-round login-icon">group_add</span>
+                    <h1>Driver Sign Up</h1>
+                    <p>Join the LogiVoice fleet</p>
+                </div>
+                <form id="register-form" class="login-form">
+                    <div class="form-group">
+                        <label for="reg-name"><span class="material-icons-round">badge</span> Full Name</label>
+                        <input type="text" id="reg-name" name="name" placeholder="John Doe" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-username"><span class="material-icons-round">person</span> Username</label>
+                        <input type="text" id="reg-username" name="username" placeholder="e.g. johndoe" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-password"><span class="material-icons-round">lock</span> Password</label>
+                        <input type="password" id="reg-password" name="password" placeholder="Min 6 characters" required minlength="6">
+                    </div>
+                    <div id="register-error" class="login-error hidden"></div>
+                    <button type="submit" class="login-btn">
+                        <span class="material-icons-round">how_to_reg</span> Register
+                    </button>
+                </form>
+                <div class="auth-switch">
+                    Already have an account? <a href="#" id="show-login">Sign In</a>
                 </div>
             </div>
         </div>

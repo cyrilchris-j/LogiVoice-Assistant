@@ -5,6 +5,25 @@ import { getAuthHeaders } from './auth.js';
 const API_URL = "http://localhost:5050/api";
 const socket = io("http://localhost:5050");
 
+// ── Caching Helpers ──────────────────────────────────────────────────────────
+const saveToCache = (key, data) => {
+    try {
+        localStorage.setItem(`v2_cache_${key}`, JSON.stringify({
+            data,
+            timestamp: Date.now()
+        }));
+    } catch (e) { }
+};
+
+export const getFromCache = (key) => {
+    try {
+        const cached = localStorage.getItem(`v2_cache_${key}`);
+        return cached ? JSON.parse(cached).data : null;
+    } catch (e) {
+        return null;
+    }
+};
+
 let currentShipment = null;
 
 // Helper to format backend data for UI
@@ -56,10 +75,12 @@ export const getTasks = async () => {
     try {
         const res = await fetch(`${API_URL}/tasks`, { headers: getAuthHeaders() });
         if (!res.ok) return [];
-        return await res.json();
+        const data = await res.json();
+        saveToCache('tasks', data);
+        return data;
     } catch (err) {
         console.error("Error fetching tasks:", err);
-        return [];
+        return getFromCache('tasks') || [];
     }
 };
 
@@ -96,10 +117,12 @@ export const getExceptions = async () => {
     try {
         const res = await fetch(`${API_URL}/exceptions`, { headers: getAuthHeaders() });
         if (!res.ok) return [];
-        return await res.json();
+        const data = await res.json();
+        saveToCache('exceptions', data);
+        return data;
     } catch (err) {
         console.error("Error fetching exceptions:", err);
-        return [];
+        return getFromCache('exceptions') || [];
     }
 };
 

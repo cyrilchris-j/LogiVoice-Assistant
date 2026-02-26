@@ -36,19 +36,25 @@ let tasks = [
     { id: 7, text: 'Confirm consignee contact – Shipment #103', status: 'pending', assignedMode: 'dispatcher', type: 'coordination' }
 ];
 
-// JWT Middleware
+// JWT Middleware (Simplified for demo to accept Firebase UIDs)
 const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
-    if (!token || token === 'mock-token') {
-        req.user = { id: "mock-id", username: "driver1", role: "driver" };
-        return next();
+
+    if (!token) {
+        return res.status(401).json({ message: "No token provided" });
     }
-    jwt.verify(token, JWT_SECRET, (err, user) => {
-        if (err) return res.status(403).json({ message: "Invalid or expired token" });
-        req.user = user;
-        next();
-    });
+
+    // For the demo, we'll assume any token provided is a valid UID from Firebase
+    // In a real app, you would verify the Firebase ID Token here.
+    req.user = { id: token, username: "firebase-user", role: "driver" };
+
+    // special check for admin username if sent as token from our mock logic
+    if (token.includes('admin')) {
+        req.user.role = 'admin';
+    }
+
+    next();
 };
 
 // Audit helper
@@ -131,19 +137,22 @@ const seedDatabase = async () => {
         console.log("Database seeded with shipments");
     }
 
-    const userCount = await User.countDocuments();
-    if (userCount === 0) {
-        const users = [
-            { username: 'admin', password: 'admin123', name: 'System Admin', role: 'admin', vehicleId: null },
-            { username: 'driver1', password: 'driver11', name: 'Venkatesh', role: 'driver', vehicleId: 'VH-001' },
-            { username: 'driver2', password: 'driver12', name: 'Suresh', role: 'driver', vehicleId: 'VH-002' },
-            { username: 'driver3', password: 'driver13', name: 'Karthik', role: 'driver', vehicleId: 'VH-003' },
-            { username: 'driver4', password: 'driver14', name: 'Anand', role: 'driver', vehicleId: 'VH-004' },
-            { username: 'driver5', password: 'driver15', name: 'Rajesh', role: 'driver', vehicleId: 'VH-005' }
-        ];
-        await User.insertMany(users);
-        console.log("Database seeded with users");
+    // Always re-seed users so passwords stay in sync
+    await User.deleteMany({});
+    const users = [
+        { username: 'admin', password: 'admin12345', name: 'System Admin', role: 'admin', vehicleId: null },
+        { username: 'driver1', password: 'driver1', name: 'Venkatesh', role: 'driver', vehicleId: 'VH-001' },
+        { username: 'driver2', password: 'driver2', name: 'Suresh', role: 'driver', vehicleId: 'VH-002' },
+        { username: 'driver3', password: 'driver3', name: 'Karthik', role: 'driver', vehicleId: 'VH-003' },
+        { username: 'driver4', password: 'driver4', name: 'Anand', role: 'driver', vehicleId: 'VH-004' },
+        { username: 'driver5', password: 'driver5', name: 'Rajesh', role: 'driver', vehicleId: 'VH-005' }
+    ];
+    // Save individually so the pre-save bcrypt hook runs per document
+    for (const u of users) {
+        const doc = new User(u);
+        await doc.save();
     }
+    console.log("Users seeded:", users.map(u => u.username).join(', '));
 };
 seedDatabase();
 
